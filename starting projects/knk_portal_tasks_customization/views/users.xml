@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_webhook_url" model="ir.ui.view">
+        <field name="name">view.res.users.form.webhook.url</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.user_groups_view" />
+        <field name="arch" type="xml">
+              <xpath expr="//field[@name='sel_groups_2_3']" position="after">
+                  <field name="web_hook"/>
+                  <field name="ticket_role"/>
+              </xpath>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_action_main_my_custom" model="ir.actions.server">
+        <field name="name">My Tickets</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_get_my_helpdesk_tickets()
+        </field>
+
+
+    </record>
+    <record id="helpdesk_team_view_form_inherit_helpdesk_userticket" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.userticket</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                  <field name="user_ticket_role" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_form_inherited" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherited</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="time_completion"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="helpdesk.helpdesk_team_view_kanban" model="ir.ui.view" >
+        <field name="name">helpdesk.team.dashboard</field>
+        <field name="model">helpdesk.team</field>
+        <field name="priority">200</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_helpdesk_kanban p-0" create="0" js_class="helpdesk_dashboard">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="use_alias"/>
+                <field name="alias_name"/>
+                <field name="alias_domain"/>
+                <field name="alias_id"/>
+                <field name="use_rating"/>
+                <field name="user_ticket_role" invisible="1"/>
+                <field name="rating_percentage_satisfaction" invisible="1"/>
+                <field name="use_sla"/>
+                <field name="upcoming_sla_fail_tickets"/>
+                <field name="unassigned_tickets"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
+                            <span class="oe_kanban_color_help" t-attf-title="In #{kanban_getcolorname(record.color.raw_value)}" role="img" t-attf-aria-label="In #{kanban_getcolorname(record.color.raw_value)}"/>
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary"><field name="name"/></div>
+                                    <small t-if="record.use_alias.value and record.alias_name.value and record.alias_domain.value"><i class="fa fa-envelope-o" title="Domain alias" role="img" aria-label="Domain alias"></i>&amp;nbsp; <t t-esc="record.alias_id.value"/></small>
+                                </div>
+                                <div class="o_kanban_manage_button_section" t-if="!selection_mode" groups="helpdesk.group_helpdesk_manager">
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                <div class="row">
+                                    <div class="col-6 o_kanban_primary_left">
+                                        <button class="btn btn-primary" name="action_view_ticket" type="object"
+                                                 attrs="{'invisible': [('user_ticket_role','=','user')]}">All Tickets</button>
+                                        <div style="padding-top:10px;"/>
+                                        <button class="btn btn-primary" name="action_get_my_helpdesk_tickets" type="object">My Tickets</button>
+                                    </div>
+                                    <div class="col-6 o_kanban_primary_right">
+                                        <div class="mb4" groups="helpdesk.group_use_sla" attrs="{'invisible': [('use_sla', '=', False)]}">
+                                            <a name="%(helpdesk.action_upcoming_sla_fail_all_tickets)d" type="action"  context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.upcoming_sla_fail_tickets.raw_value"/> SLA Issues</a>
+                                        </div>
+                                        <div class="mb4">
+                                            <a name="%(helpdesk.helpdesk_ticket_action_unassigned)d" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.unassigned_tickets.raw_value"/> Unassigned Tickets</a>
+                                        </div>
+                                        <div class="mb4" t-if="record.use_rating.raw_value">
+                                            <a name="action_view_all_rating" type="object">See Customer Satisfaction</a>
+                                        </div>
+                                    </div>
+                                </div><!-- Smiley indicator of rating:
+                                <div t-if="record.use_rating.raw_value and record.rating_percentage_satisfaction.raw_value &gt;= 0" class="row text-center">
+                                    <a name="action_view_all_rating" type="object" title="Percentage of happy people about this team" class="float-right">
+                                        <h5 t-attf-class="badge #{record.rating_percentage_satisfaction.raw_value &gt;= 50 ? 'badge-success' : 'badge-warning'}">
+                                            <i t-attf-class="fa #{record.rating_percentage_satisfaction.raw_value &gt;= 50 ? 'fa-smile-o' : 'fa-frown-o'}" role="img" aria-label="Satisfaction rate" title="Satisfaction rate"/> <t t-raw="record.rating_percentage_satisfaction.raw_value"/> %
+                                        </h5>
+                                    </a>
+                                </div> -->
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                    <div role="menuitem" aria-haspopup="true" class="col-8">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
+                                    <div role="menuitem" class="col-4 text-right">
+                                        <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <menuitem name="Tickets" id="helpdesk.helpdesk_ticket_menu_main" groups="base.group_no_one" />
+    <menuitem id="helpdesk_ticket_menu_my_custom" name="My Tickets" action="helpdesk_ticket_action_main_my_custom"
+        sequence="10" parent="helpdesk.menu_helpdesk_root"/>
+</odoo>

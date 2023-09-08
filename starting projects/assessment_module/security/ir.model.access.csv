@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access.sale.agreement,access_sale_agreement,assessment_module.model_sale_agreement,base.group_user,1,1,1,1
+access.sale.agreement.item,access_sale_agreement_item,assessment_module.model_sale_agreement_item,base.group_user,1,1,1,1
+
+

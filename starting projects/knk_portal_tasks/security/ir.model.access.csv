@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_helpdesk_phonecall_manager,helpdesk.phonecall.manager,model_helpdesk_phonecall,helpdesk.group_helpdesk_manager,1,1,1,1
+access_helpdesk_phonecall_all,helpdesk.phonecall.user,model_helpdesk_phonecall,base.group_user,1,0,0,0
+access_helpdesk_phonecall_sale,helpdesk.phonecall.sale,model_helpdesk_phonecall,helpdesk.group_helpdesk_user,1,1,1,0
+access_helpdesk_phonecall_partner_manager,helpdesk.phonecall.partner.manager,model_helpdesk_phonecall,base.group_partner_manager,1,1,1,1
+access_helpdesk_phonecall2phonecall,access_helpdesk_phonecall2phonecall,model_helpdesk_phonecall2phonecall,base.group_user,1,1,1,1

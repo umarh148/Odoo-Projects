@@ -1,0 +1,80 @@
+{
+    "activity": "New Ticket Assigned",
+    "attachments": [
+        {
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.0",
+            "body": [
+                {
+                    "type": "TextBlock",
+                    "text": "%%TICKET_NUM%%",
+                    "weight": "bolder",
+                    "size": "medium",
+                    "wrap": true
+                },
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "Image",
+                                    "url": "https://knkit.sg/wp-content/uploads/2021/12/logo.png",
+                                    "size": "small",
+                                    "style": "person"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "%%CUSTOMER_NAME%%",
+                                    "weight": "bolder",
+                                    "wrap": true
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Created %%CREATION_DATE%%",
+                                    "isSubtle": true,
+                                    "wrap": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "%%TASK_NAME%%",
+                    "wrap": true
+                },
+                {
+                    "type": "FactSet",
+                    "facts": [
+                        {
+                            "title": "Ticket #",
+                            "value": "%%TICKET_NUM%%"
+                        },
+                        {
+                            "title": "Ticket Type:",
+                            "value": "%%TICKET_TYPE%%"
+                        }
+                    ]
+                }
+            ],
+            "actions": [
+                {
+                    "type": "Action.OpenUrl",
+                    "title": "View",
+                    "url": "%%TICKET_URL%%"
+                }
+            ]
+        }
+    ]
+}

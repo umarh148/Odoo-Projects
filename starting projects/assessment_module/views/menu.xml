@@ -1,0 +1,8 @@
+<odoo>
+  <data>
+    <menuitem id="menu_sale_agreement"
+              name="Sale Agreement"
+              action="action_sale_agreement"
+              sequence="0"/>
+  </data>
+</odoo>

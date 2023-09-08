@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rest_dis_helpdesk_ticket_view_form" model="ir.ui.view">
+        <field name="name">rest.dis.helpdesk.ticket.view.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    class="oe_stat_button"
+                    icon="fa-phone"
+                    name="button_open_phonecall"
+                    type="object"
+                >
+                    <field name="phonecall_count" string="Calls" widget="statinfo" />
+                </button>
+            </xpath>
+            <field name="name" position="after">
+                <group>
+                    <h1><field name="sequence_name" nolabel="1"/></h1>
+                </group>
+            </field>
+            <field name="email_cc" position="after">
+                
+                <field name="capture_attachment_ids"   widget="many2many_binary"
+                    string="Attach a File">
+                    <kanban quick_create="true" create="false" delete="true">
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div class="oe_kanban_global_click" style="position: relative">
+                                    <div class="oe_module_vignette">
+                                        <field name="datas" widget="image"
+                                            style="width:50px; height:50px;" class="oe_avatar" />
+                                        <field name="description" />
+                                        <div class="oe_module_desc" />
+                                    </div>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </field>
+        </field>
+    </record>
+
+    <template id="helpdesk_portal_inherit_knk" inherit_id="helpdesk.tickets_followup">
+        <xpath expr="//t[@t-set='card_header']" position="replace">
+
+            <t t-set="card_header">
+                <div class="row no-gutters">
+                    <div class="col-md">
+                        <h5 class="d-flex mb-1 mb-md-0">
+                            <div class="col-9 text-truncate">
+                                <span t-field="ticket.name"/>
+                                <small class="text-muted "> (#<span t-field="ticket.sequence_name"/>)</small>
+                            </div>
+                            <div class="col-3 text-right">
+                                <small class="text-right">Status:</small>
+                                <span t-field="ticket.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this ticket"/>
+                            </div>
+                        </h5>
+                    </div>
+                </div>
+            </t>
+
+        </xpath>
+
+        <xpath expr="//div[@name='description']" position="before">
+            <div class="row mb-4" name="subject">
+                <strong class="col-lg-2">Subject</strong>
+                <div t-if="ticket.name" class="col-lg-10" t-field="ticket.name"/>
+                <div t-else="" class="col-lg-10">
+                    <em class="text-muted"><small>No Subject</small></em>
+                </div>
+            </div>
+            <div class="row mb-4" name="ticket_type_id">
+                <strong class="col-lg-2">Ticket Type</strong>
+                <div t-if="ticket.ticket_type_id" class="col-lg-10" t-field="ticket.ticket_type_id.name"/>
+                <div t-else="" class="col-lg-10">
+                    <em class="text-muted"><small>No Type selected</small></em>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='description']" position="after">
+            <div class="row mb-4" name="ticket_type_id">
+                <strong class="col-lg-2">Attachments</strong>
+                <div t-if="ticket.capture_attachment_ids" class="col-lg-10">
+                    <t t-foreach="ticket.capture_attachment_ids" t-as="picture">
+                        <div t-if="picture.mimetype=='video/mp4' and picture.datas">
+                            <div class="media_iframe_video iframe_custom o_we_selected_image">
+                                <div class="media_iframe_video_size" contenteditable="false" style="padding-bottom:10px;"></div>
+                                <video controls="controls" data-original-title="" title="" aria-describedby="tooltip171873">
+                                    <source t-attf-src="/web/content/#{picture.id}?controls=1" type="video/mp4" />
+                                </video>
+                            </div>
+                        </div>
+                        <div t-if="picture.mimetype in ['image/png','image/jpg','image/jpeg'] and picture.datas" style="height:50%; width:50%;text-align:center;display: block;margin-left: auto;
+                                                margin-right: auto;" class="text-center">
+                            <span t-field="picture.datas" t-options='{"widget": "image"}'/>
+                        </div>
+
+                    </t>
+                </div>
+                <div t-else="" class="col-lg-10">
+                    <em class="text-muted"><small>-</small></em>
+                </div>
+            </div>
+            
+        </xpath>
+    </template>
+
+    <template id="helpdesk_portal_my_home_knk" inherit_id="helpdesk.portal_my_home_menu_helpdesk">
+        <xpath expr="//li[@t-if='ticket']" position="replace">
+
+            <li t-if="ticket" class="breadcrumb-item active">
+                #<span t-field="ticket.sequence_name"/>
+            </li>
+
+        </xpath>
+    </template>
+    <template id="helpdesk_portal_helpdesk_tick_knk" inherit_id="helpdesk.portal_helpdesk_ticket">
+        <xpath expr="//t[@t-call='portal.portal_table']" position="replace">
+
+            <t t-call="portal.portal_table">
+                <t t-foreach="grouped_tickets" t-as="tickets">
+                    <thead>
+                        <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
+                            <th class="text-left">Ref</th>
+                            <th t-if="groupby == 'none'" class="w-100">Description</th>
+                            
+                            <th t-else="">
+                                <em class="font-weight-normal text-muted">Tickets in stage:</em>
+                                <span t-field="tickets[0].stage_id.name"/></th>
+                            <th/>
+                            <th t-if="groupby != 'stage'" class="w-100">Reported On</th>
+                            
+                            <th t-if="groupby != 'stage'" class="w-100">Reported By</th>
+                            <th t-if="groupby != 'stage'" class="text-center">Stage</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="tickets" t-as="ticket">
+                        <tr>
+                            <td class="text-left"><a t-attf-href="/helpdesk/ticket/#{ticket.id}"><small>#</small><t t-esc="ticket.sequence_name"/></a></td>
+                            <td><a t-attf-href="/helpdesk/ticket/#{ticket.id}"><span t-field="ticket.name"/></a></td><td/>
+                            <td t-if="groupby != 'stage'" class="text-center"><span t-options="{'widget': 'date'}" t-field="ticket.create_date"/></td>
+                            <td t-if="groupby != 'stage'" class="text-center"><span t-field="ticket.partner_id.name"/></td>
+                        
+                            <td t-if="groupby != 'stage'" class="text-center"><span class="badge badge-pill badge-info" t-field="ticket.stage_id.name"/></td>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+
+        </xpath>
+    </template>
+</odoo>

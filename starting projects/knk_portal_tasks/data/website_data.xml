@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="tasks_upload_images" name="Upload Image JS" inherit_id="website.assets_frontend">
+                <xpath expr="." position="inside">
+                    
+                </xpath>
+        </template>
+        <template id="create_ticket" name="Create a Ticket">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                            <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                            <div class="o_we_bg_filter bg-black-50"/>
+                            <div class="container">
+                                <h1>Create a Ticket</h1>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="container mt-4 mb-5">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12 mr-lg-auto">
+                                <div class="oe_structure">
+                                    <section class="s_text_block" data-snippet="s_text_block">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <p>
+                                                        Schedule the meeting with our representative after checking their availability in your time zone.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div id="create_ticket_section">
+                                    <section id="website_meeting_form" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                                        <div class="container">
+                                            
+                                            
+                                            <form id="create-ticket-form" action="/ticket_public/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="helpdesk.ticket" data-success-mode="redirect" data-success-page="/meetings-thank-you">
+                                                <div class="s_website_form_rows row s_col_no_bgcolor">
+                                                    <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="subject">
+                                                                <span class="s_website_form_label_content">Subject</span>
+                                                                <span class="s_website_form_mark"> *</span>
+                                                            </label>
+                                                            <div class="col-sm">
+                                                                <input id="subject" type="text" class="form-control s_website_form_input" name="name" required=""/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="issue_type">
+                                                                <span class="s_website_form_label_content">Issue Type</span>
+                                                                <span class="s_website_form_mark"> *</span>
+                                                            </label>
+                                                            <div class="col-sm">
+                                                                <select id="issue_type" class="form-control s_website_form_input set-issue-type" name="issue_type" required="">
+                                                                    <t t-foreach="ticket_types" t-as="ttp">
+                                                                        <option t-att-value="ttp[0]"><t t-esc="ttp[1]"/></option>
+                                                                    </t>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="description">
+                                                                <span class="s_website_form_label_content">Description</span>
+                                                                <span class="s_website_form_mark"> *</span>
+                                                            </label>
+                                                            <div class="col-sm md">
+                                                                <textarea id="description" rows="7" class="form-control s_website_form_description load_editor" name="description" required=""/>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="description">
+                                                                <span class="s_website_form_label_content">Attachments</span>
+                                                            </label>
+                                                            <div class="col-sm">
+                                                                <div id="attachment-tickets" class="dropzone" >
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    
+
+                                                    <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
+                                                        <div style="width: 200px;" class="s_website_form_label">
+                                                            <span id="s_website_form_result"></span>
+                                                        </div>
+                                                        <a id="s_website_form_send" href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <script type="text/javascript" src="/knk_portal_tasks/static/src/js/dropzone_params.js"></script>
+                                            
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure mt-2"/>
+                </div>
+            </t>
+        </template>
+
+        <record id="meetings_thanks" model="website.page">
+            <field name="name">Thanks for contacting the support</field>
+            <field name="type">qweb</field>
+            <field name="url">/meetings-thank-you</field>
+            <field name="website_indexed" eval="False"/>
+            <field name="is_published">True</field>
+            <field name="key">knk_portal_tasks.meetings_thanks</field>
+            <field name="arch" type="xml">
+                <t name="Thanks for Scheduling a Meeting with Us" t-name="knk_portal_tasks.meetings_thanks">
+                    <t t-call="website.layout">
+                      <div id="wrap">
+                        <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
+                        <div class="container mt-4">
+                            <div class="row">
+                                <div class="col-lg-7 col-xl-6 mr-lg-auto oe_structure">
+                                    <section class="pt40 s_text_block pb40 o_colored_level o_cc o_cc1" data-snippet="s_text_block" data-name="Text">
+                                        <div class="container">
+                                            <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/><br/>
+                                            <h1 class="text-center">Thank you!</h1>
+                                            <div class="pb16 pt16 s_hr" data-snippet="s_hr" data-name="Separator">
+                                                <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                            </div>
+                                            <h5 class="text-center">
+                                                <span class="fa fa-check-circle"/>
+                                                <span>Your ticket has been created with us <b>successfully.</b></span>
+                                            </h5>
+                                            <p class="text-center">We will verify and update on this ticket shortly.</p>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_2"/>
+                      </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="menu_schedule_meeting" model="website.menu">
+            <field name="name">Create a Ticket</field>
+            <field name="url">/schedule</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">70</field>
+        </record>
+    </data>
+</odoo>

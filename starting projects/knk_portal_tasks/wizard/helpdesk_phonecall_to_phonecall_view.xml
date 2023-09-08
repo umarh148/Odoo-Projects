@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="phonecall_to_phonecall_view" model="ir.ui.view">
+        <field name="name">helpdesk.phonecall2phonecall.form</field>
+        <field name="model">helpdesk.phonecall2phonecall</field>
+        <field name="arch" type="xml">
+            <form string="Schedule/Log a Call">
+                <group>
+                    <group>
+                        <field name="action" />
+                        <field attrs="{'readonly': [(1,'=',1)]}" name="partner_id" />
+                        <!-- <field groups="helpdesk.group_helpdesk_user" name="team_id" /> -->
+                    </group>
+                    <group>
+                        <field name="name" />
+                        <field
+                            attrs="{'invisible': [('action','=','log')]}"
+                            name="date"
+                            string="Planned Date"
+                        />
+                        <field
+                            context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'helpdesk.group_helpdesk_user_all_leads']}"
+                            name="user_id"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        attrs="{'invisible' : [('action', '!=', 'log')]}"
+                        class="oe_highlight"
+                        name="action_schedule"
+                        string="Log Call"
+                        type="object"
+                    />
+                    <button
+                        attrs="{'invisible' : [('action', '!=', 'schedule')]}"
+                        class="oe_highlight"
+                        name="action_schedule"
+                        string="Schedule Call"
+                        type="object"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="phonecall_to_phonecall_act" model="ir.actions.act_window">
+        <field name="name">Schedule Other Call</field>
+        <field name="res_model">helpdesk.phonecall2phonecall</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="phonecall_to_phonecall_view" />
+        <field name="target">new</field>
+    </record>
+</odoo>
